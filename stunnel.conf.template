@@ -1,0 +1,15 @@
+pid = /var/run/stunnel/stunnel.pid
+socket = l:TCP_NODELAY=1
+socket = r:TCP_NODELAY=1
+CAfile = ${STUNNEL_CAFILE}
+verifyChain = ${STUNNEL_VERIFY_CHAIN}
+
+debug = ${STUNNEL_DEBUG}
+output = /dev/stdout
+foreground = yes
+client = yes
+
+[redis]
+accept = 0.0.0.0:6379
+connect = ${STUNNEL_CONNECT}
+checkHost = ${STUNNEL_CHECKHOST}
