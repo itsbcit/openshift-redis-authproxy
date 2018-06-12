@@ -17,5 +17,8 @@ RUN chmod 664 /etc/passwd /etc/group
 
 COPY stunnel.conf.template /etc/stunnel.conf.template
 
+ENV STUNNEL_CONNECT ""
+ENV STUNNEL_PSK ""
+
 ENTRYPOINT ["/sbin/tini", "--", "/docker-entrypoint.sh"]
 CMD ["/usr/bin/stunnel"]
