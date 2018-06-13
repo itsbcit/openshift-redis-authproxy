@@ -1,0 +1,123 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "labels": {
+    "app": "redis-authproxy",
+    "template": "redis-authproxy"
+  },
+  "metadata": {
+    "name": "redis-authproxy",
+    "annotations": {
+      "description": "External Redis proxied by authenticated stunnel",
+      "iconClass": "icon-redis",
+      "openshift.io/display-name": "Redis Authtunnel",
+      "openshift.io/long-description": "This template defines resources needed to proxy an unauthenticated Redis server into a trusted project in a multi-tenant OpenShift project.",
+      "openshift.io/provider-display-name": "BCIT TIS Linux",
+      "tags": "bcit,redis,stunnel"
+    }
+  },
+  "message": "stunnel will connect to ${STUNNEL_CONNECT} using PSK auth \"${STUNNEL_PSK_USERNAME}:${STUNNEL_PSK_PASSWORD}\"",
+  "objects": [
+      {
+          "kind": "DeploymentConfig",
+          "apiVersion": "v1",
+          "metadata": {
+              "name": "redis-authproxy",
+              "labels": {
+                  "app": "redis-authproxy"
+              }
+          },
+          "spec": {
+              "replicas": 1,
+              "selector": {
+                  "app": "redis-authproxy",
+                  "deploymentconfig": "redis-authproxy"
+              },
+              "template": {
+                  "metadata": {
+                      "labels": {
+                          "app": "redis-authproxy",
+                          "deploymentconfig": "redis-authproxy"
+                      }
+                  },
+                  "spec": {
+                      "containers": [
+                          {
+                              "name": "redis-authproxy",
+                              "image": "bcit/openshift-redis-authproxy:latest",
+                              "ports": [
+                                  {
+                                      "containerPort": 6379,
+                                      "protocol": "TCP"
+                                  }
+                              ],
+                              "env": [
+                                {
+                                  "name": "STUNNEL_CONNECT",
+                                  "value": "${STUNNEL_CONNECT}"
+                                },
+                                {
+                                  "name": "STUNNEL_PSK",
+                                  "value": "${STUNNEL_PSK_USERNAME}:${STUNNEL_PSK_PASSWORD}"
+                                }
+                              ]
+                          }
+                      ]
+                  }
+              }
+          }
+      },
+      {
+          "kind": "Service",
+          "apiVersion": "v1",
+          "metadata": {
+              "name": "${SERVICE_NAME}",
+              "labels": {
+                  "app": "redis-authproxy"
+              }
+          },
+          "spec": {
+              "ports": [
+                  {
+                      "name": "6379-tcp",
+                      "protocol": "TCP",
+                      "port": 6379,
+                      "targetPort": 6379
+                  }
+              ],
+              "selector": {
+                  "deploymentconfig": "redis-authproxy"
+              },
+              "type": "ClusterIP",
+              "sessionAffinity": "None"
+          }
+      }
+  ],
+  "parameters": [
+    {
+      "name": "SERVICE_NAME",
+      "description": "Service name (default: redis)",
+      "value": "redis",
+      "required": true
+    },
+    {
+      "name": "STUNNEL_CONNECT",
+      "description": "Redis stunnel connection in the form hostname:port",
+      "required": true
+    },
+    {
+      "name": "STUNNEL_PSK_USERNAME",
+      "description": "Stunnel PSK Username",
+      "generate": "expression",
+      "from": "[a-zA-Z]{6}",
+      "required": true
+    },
+    {
+      "name": "STUNNEL_PSK_PASSWORD",
+      "description": "Stunnel PSK Password",
+      "generate": "expression",
+      "from": "[a-zA-Z0-9]{32}",
+      "required": true
+    }
+  ]
+}
