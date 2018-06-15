@@ -12,4 +12,5 @@ fi
 
 if [[ ! -s ${STUNNEL_CONF} ]]; then
     cat $STUNNEL_CONF_TEMPLATE | envsubst > ${STUNNEL_CONF}
+    echo ${STUNNEL_PSK} > /etc/stunnel/psk.txt
 fi
