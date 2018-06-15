@@ -13,3 +13,4 @@ client = yes
 accept = 0.0.0.0:6379
 connect = ${STUNNEL_CONNECT}
 checkHost = ${STUNNEL_CHECKHOST}
+PSKsecrets = /etc/stunnel/psk.txt
