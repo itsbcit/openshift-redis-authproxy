@@ -1,5 +1,6 @@
-export STUNNEL_CONF="/etc/stunnel/stunnel.conf"
-export STUNNEL_CONF_TEMPLATE="/etc/stunnel.conf.template"
+export STUNNEL_CONF="${STUNNEL_CONF:-/etc/stunnel/stunnel.conf}"
+export STUNNEL_PSK_FILE="${STUNNEL_PSK_FILE:-/etc/stunnel/psk.txt}"
+export STUNNEL_CONF_TEMPLATE="${STUNNEL_CONF_TEMPLATE:-/etc/stunnel.conf.template}"
 export STUNNEL_DEBUG="${STUNNEL_DEBUG:-5}"
 export STUNNEL_CAFILE="${STUNNEL_CAFILE:-/etc/ssl/certs/ca-certificates.crt}"
 export STUNNEL_VERIFY_CHAIN="${STUNNEL_VERIFY_CHAIN:-yes}"
@@ -11,6 +12,9 @@ if [[ -z "${STUNNEL_CONNECT}" ]] || [[ -z "${STUNNEL_PSK}" ]];then
 fi
 
 if [[ ! -s ${STUNNEL_CONF} ]]; then
-    cat $STUNNEL_CONF_TEMPLATE | envsubst > ${STUNNEL_CONF}
-    echo ${STUNNEL_PSK} > /etc/stunnel/psk.txt
+    cat ${STUNNEL_CONF_TEMPLATE} | envsubst > ${STUNNEL_CONF}
+fi
+
+if [[ ! -s ${STUNNEL_PSK_FILE} ]]; then
+    echo ${STUNNEL_PSK} > ${STUNNEL_PSK_FILE}
 fi

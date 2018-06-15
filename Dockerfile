@@ -22,4 +22,4 @@ ENV STUNNEL_PSK ""
 EXPOSE 6379
 
 ENTRYPOINT ["/sbin/tini", "--", "/docker-entrypoint.sh"]
-CMD ["/usr/bin/stunnel"]
+CMD ["/usr/local/bin/stunnel"]
