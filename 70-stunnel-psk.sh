@@ -11,6 +11,4 @@ if [[ ! -s ${STUNNEL_CONF} ]]; then
     cat ${STUNNEL_CONF_TEMPLATE} | envsubst > ${STUNNEL_CONF}
 fi
 
-if [[ ! -s ${STUNNEL_PSK_FILE} ]]; then
-    echo ${STUNNEL_PSK} > ${STUNNEL_PSK_FILE}
-fi
+echo ${STUNNEL_PSK} > ${STUNNEL_PSK_FILE}
