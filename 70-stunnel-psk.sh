@@ -7,8 +7,7 @@ if [[ -z "${STUNNEL_CONNECT}" ]] || [[ -z "${STUNNEL_PSK}" ]];then
     exit 1
 fi
 
-if [[ ! -s ${STUNNEL_CONF} ]]; then
-    cat ${STUNNEL_CONF_TEMPLATE} | envsubst > ${STUNNEL_CONF}
-fi
+cat ${STUNNEL_CONF_TEMPLATE} | envsubst > ${STUNNEL_CONF}
+
 
 echo ${STUNNEL_PSK} > ${STUNNEL_PSK_FILE}
